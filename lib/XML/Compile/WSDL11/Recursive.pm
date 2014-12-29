@@ -112,9 +112,8 @@ sub _get_uri_content_ref {
     my $response = $self->user_agent->get($uri);
     if ( $response->is_error ) {
         HTTP::Exception->throw( $response->code,
-            status_message =>
-                sprintf '"%s": %s' => ( $uri->as_string, $response->message ),
-        );
+            status_message => sprintf '"%s": %s' =>
+                ( $uri->as_string, $response->message // q{} ) );
     }
     return $response->decoded_content( ref => 1, raise_error => 1 );
 }

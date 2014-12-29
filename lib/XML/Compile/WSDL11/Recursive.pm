@@ -14,6 +14,7 @@ use XML::Compile::WSDL11;
 use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
 use XML::Compile::Util 'SCHEMA2001';
+use XML::Compile::SOAP::Util 'WSDL11';
 use XML::LibXML;
 
 has cache => (
@@ -81,6 +82,12 @@ sub _build_proxy_cache {
         if ( my @imports
             = map { URI->new_abs( $_->getAttribute('schemaLocation'), $uri ) }
             $document->getElementsByTagNameNS( (SCHEMA2001) => 'import' ) )
+        {
+            $proxy = $self->_build_proxy_cache( $proxy, @imports );
+        }
+        if ( my @imports
+            = map { URI->new_abs( $_->getAttribute('location'), $uri ) }
+            $document->getElementsByTagNameNS( (WSDL11) => 'import' ) )
         {
             $proxy = $self->_build_proxy_cache( $proxy, @imports );
         }

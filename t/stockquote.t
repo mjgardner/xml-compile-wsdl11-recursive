@@ -1,7 +1,7 @@
 #!perl
 
 use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
-use Test::Most;
+use Test::Most tests => 5;
 use Test::LWP::UserAgent;
 use HTTP::Response;
 use HTTP::Status qw(:constants status_message);
@@ -23,11 +23,18 @@ my $wsdl = new_ok(
     'stockquoteservice WSDL',
 );
 lives_and(
-    sub { isa_ok( $wsdl->proxy => 'XML::Compile::WSDL11', 'WSDL proxy' ) } =>
+    sub { isa_ok( $wsdl->proxy, 'XML::Compile::WSDL11' => 'WSDL proxy' ) } =>
         'WSDL proxy' );
 lives_ok( sub { $wsdl->proxy->compileCalls() } => 'compileCalls' );
 
-done_testing;
+cmp_bag(
+    [ keys %{ $wsdl->proxy->index } ],
+    [qw(binding message port portType service)] => 'WSDL definition classes',
+);
+cmp_bag(
+    [ map { $_->name } $wsdl->proxy->operations ],
+    [qw(GetLastTradePrice)] => 'WSDL operations',
+);
 
 sub examplecom_responder {
     my $request = shift;
@@ -36,6 +43,6 @@ sub examplecom_responder {
     $path =~ s(^/)();
 
     my $response = HTTP::Response->new( HTTP_OK => status_message(HTTP_OK) );
-    $response->content( path( t => $path )->slurp );
+    $response->content( path( 't', $path )->slurp );
     return $response;
 }

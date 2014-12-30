@@ -185,6 +185,9 @@ L<XML::Compile::WSDL11|XML::Compile::WSDL11> constructor. Defaults to:
 =attr proxy
 
 Retrieves the resulting L<XML::Compile::WSDL11|XML::Compile::WSDL11> object.
+Any definitions are retrieved and compiled on first access to this attribute.
+If there are problems retrieving any files, an
+L<HTTP::Exception|HTTP::Exception> is thrown with the details.
 
 =attr uri
 

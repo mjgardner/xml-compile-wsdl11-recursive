@@ -29,7 +29,7 @@ L<description of XML::Compile::WSDL11|XML::Compile::WSDL11/DESCRIPTION>:
 
 =over
 
-When the definitions are spread over multiple files you will need to
+When the [WSDL] definitions are spread over multiple files you will need to
 use L<addWSDL()|XML::Compile::WSDL11/"Extension"> (wsdl) or
 L<importDefinitions()|XML::Compile::Schema/"Administration">
 (additional schema's)
@@ -74,6 +74,9 @@ L<XML::Compile::WSDL11|XML::Compile::WSDL11> constructor. Defaults to:
 =head2 proxy
 
 Retrieves the resulting L<XML::Compile::WSDL11|XML::Compile::WSDL11> object.
+Any definitions are retrieved and compiled on first access to this attribute.
+If there are problems retrieving any files, an
+L<HTTP::Exception|HTTP::Exception> is thrown with the details.
 
 =head2 uri
 

@@ -137,9 +137,33 @@ __END__
 
 =head1 DESCRIPTION
 
-This module wraps L<XML::Compile::WSDL11|XML::Compile::WSDL11>, recursively
-parsing a WSDL specification and child XSD schemas and importing the latter
-definition(s) before compiling the lot into a proxy object.
+From the
+L<description of XML::Compile::WSDL11|XML::Compile::WSDL11/DESCRIPTION>:
+
+=over
+
+When the [WSDL] definitions are spread over multiple files you will need to
+use L<addWSDL()|XML::Compile::WSDL11/"Extension"> (wsdl) or
+L<importDefinitions()|XML::Compile::Schema/"Administration">
+(additional schema's)
+explicitly. Usually, interreferences between those files are broken.
+Often they reference over networks (you should never trust). So, on
+purpose you B<must explicitly load> the files you need from local disk!
+(of course, it is simple to find one-liners as work-arounds, but I will
+to tell you how!)
+
+=back
+
+This module implements that work-around, recursively parsing and compiling a
+WSDL specification and any imported definitions and schemas. The wrapped WSDL
+is available as a C<proxy> attribute.
+
+It also provides a hook to use any L<CHI|CHI> driver so that retrieved files
+may be cached locally, reducing dependence on network-accessible definitions.
+
+You may also provide your own L<LWP::UserAgent|LWP::UserAgent> (sub)class
+instance, possibly to correct on-the-fly any broken interreferences between
+files as warned above.
 
 =attr cache
 

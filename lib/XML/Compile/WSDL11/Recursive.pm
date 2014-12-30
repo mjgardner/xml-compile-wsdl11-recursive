@@ -21,12 +21,8 @@ has cache => (
     is       => 'lazy',
     isa      => InstanceOf('CHI::Driver'),
     init_arg => undef,
+    default  => sub { CHI->new( %{ shift->cache_parameters } ) },
 );
-
-sub _build_cache {
-    my $self = shift;
-    return CHI->new( %{ $self->cache_parameters } );
-}
 
 has cache_parameters => (
     is      => 'ro',
@@ -103,9 +99,11 @@ has uri => (
     coerce   => sub { URI->new( $_[0] ) },
 );
 
-has user_agent => ( is => 'lazy', isa => InstanceOf('LWP::UserAgent') );
-
-sub _build_user_agent { return LWP::UserAgent->new() }
+has user_agent => (
+    is      => 'lazy',
+    isa     => InstanceOf('LWP::UserAgent'),
+    default => sub { LWP::UserAgent->new() },
+);
 
 sub _get_uri_content_ref {
     my ( $self, $uri ) = @_;

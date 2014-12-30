@@ -74,7 +74,11 @@ sub _build_proxy_cache {
         my $document = XML::LibXML->load_xml( string => $content_ref );
         $cache->set( $uri->as_string => $document->toString );
 
+        if ( 'definitions' eq $document->documentElement->getName ) {
+            $proxy->addWSDL($content_ref);
+        }
         $proxy->importDefinitions($content_ref);
+
         if ( my @imports
             = map { URI->new_abs( $_->getAttribute('schemaLocation'), $uri ) }
             $document->getElementsByTagNameNS( (SCHEMA2001) => 'import' ) )

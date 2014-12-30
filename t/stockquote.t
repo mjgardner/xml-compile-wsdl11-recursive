@@ -10,6 +10,8 @@ use URI;
 use URI::file;
 use XML::Compile::WSDL11::Recursive;
 
+#use Log::Report mode => 'DEBUG';
+
 my $user_agent = Test::LWP::UserAgent->new( network_fallback => 1 );
 $user_agent->map_response( 'example.com' => \&examplecom_responder );
 

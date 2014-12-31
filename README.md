@@ -101,12 +101,6 @@ in addition to those websites please use your favorite search engine to discover
 
     [http://search.cpan.org/dist/XML-Compile-WSDL11-Recursive](http://search.cpan.org/dist/XML-Compile-WSDL11-Recursive)
 
-- RT: CPAN's Bug Tracker
-
-    The RT ( Request Tracker ) website is the default bug/issue tracking system for CPAN.
-
-    [https://rt.cpan.org/Public/Dist/Display.html?Name=XML-Compile-WSDL11-Recursive](https://rt.cpan.org/Public/Dist/Display.html?Name=XML-Compile-WSDL11-Recursive)
-
 - AnnoCPAN
 
     The AnnoCPAN is a website that allows community annotations of Perl module documentation.
@@ -149,21 +143,15 @@ in addition to those websites please use your favorite search engine to discover
 
     [http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive](http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive)
 
-## Bugs / Feature Requests
-
-Please report any bugs or feature requests by email to `bug-xml-compile-wsdl11-recursive at rt.cpan.org`, or through
-the web interface at [https://rt.cpan.org/Public/Bug/Report.html?Queue=XML-Compile-WSDL11-Recursive](https://rt.cpan.org/Public/Bug/Report.html?Queue=XML-Compile-WSDL11-Recursive). You will be automatically notified of any
-progress on the request by the system.
-
 ## Source Code
 
 The code is open to the world, and available for you to hack on. Please feel free to browse it and play
 with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
 from your repository :)
 
-[https://github.com/mjgardner/XML-Compile-WSDL11-Recursive](https://github.com/mjgardner/XML-Compile-WSDL11-Recursive)
+[https://github.com/mjgardner/xml-compile-wsdl11-recursive](https://github.com/mjgardner/xml-compile-wsdl11-recursive)
 
-    git clone git://github.com/mjgardner/XML-Compile-WSDL11-Recursive.git
+    git clone git://github.com/mjgardner/xml-compile-wsdl11-recursive.git
 
 # AUTHOR
 

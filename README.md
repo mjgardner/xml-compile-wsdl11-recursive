@@ -143,6 +143,14 @@ in addition to those websites please use your favorite search engine to discover
 
     [http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive](http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive)
 
+## Bugs / Feature Requests
+
+Please report any bugs or feature requests through the web
+interface at
+[https://github.com/mjgardner/xml-compile-wsdl11-recursive/issues](https://github.com/mjgardner/xml-compile-wsdl11-recursive/issues).
+You will be automatically notified of any progress on the
+request by the system.
+
 ## Source Code
 
 The code is open to the world, and available for you to hack on. Please feel free to browse it and play
@@ -159,7 +167,7 @@ Mark Gardner <mjgardner@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by ZipRecruiter.
+This software is copyright (c) 2015 by ZipRecruiter.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -10,10 +10,10 @@ version 0.002
 
     use XML::CompileX::Schema::Loader;
 
-    my $wsdl = XML::CompileX::Schema::Loader->new(
+    my $loader = XML::CompileX::Schema::Loader->new(
                 uris => 'http://example.com/foo.wsdl' );
-    $wsdl->proxy->compileCalls();
-    my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );
+    $loader->wsdl->compileCalls();
+    my ( $answer, $trace ) = $loader->wsdl->call( hello => {name => 'Joe'} );
 
 # DESCRIPTION
 
@@ -32,7 +32,7 @@ From the
 
 This module implements that work-around, recursively parsing and compiling a
 WSDL specification and any imported definitions and schemas. The wrapped WSDL
-is available as a `proxy` attribute.
+is available as a `wsdl` attribute.
 
 It also provides a hook to use any [CHI](https://metacpan.org/pod/CHI) driver so that retrieved files
 may be cached locally, reducing dependence on network-accessible definitions.
@@ -60,7 +60,7 @@ Optional hash reference of additional parameters to pass to the
 
     { allow_undeclared => 1 }
 
-## proxy
+## wsdl
 
 Retrieves the resulting [XML::Compile::WSDL11](https://metacpan.org/pod/XML::Compile::WSDL11) object.
 Any definitions are retrieved and compiled on first access to this attribute.
@@ -75,7 +75,7 @@ that points to WSDL file(s) to compile.
 ## user\_agent
 
 Optional instance of an [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent) that will be used to
-get all WSDL and XSD content when the proxy cache is built.
+get all WSDL and XSD content when the cache is built.
 
 # SUPPORT
 

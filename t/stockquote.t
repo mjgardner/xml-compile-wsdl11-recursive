@@ -15,7 +15,7 @@ use XML::CompileX::Schema::Loader;
 my $user_agent = Test::LWP::UserAgent->new( network_fallback => 1 );
 $user_agent->map_response( 'example.com' => \&examplecom_responder );
 
-my $wsdl = new_ok(
+my $loader = new_ok(
     'XML::CompileX::Schema::Loader' => [
         uris => URI::file->new_abs('t/stockquote/stockquoteservice.wsdl'),
         user_agent => $user_agent,
@@ -23,16 +23,16 @@ my $wsdl = new_ok(
     'stockquoteservice WSDL',
 );
 lives_and(
-    sub { isa_ok( $wsdl->proxy, 'XML::Compile::WSDL11' => 'WSDL proxy' ) } =>
-        'WSDL proxy' );
-lives_ok( sub { $wsdl->proxy->compileCalls() } => 'compileCalls' );
+    sub { isa_ok( $loader->wsdl, 'XML::Compile::WSDL11' => 'WSDL proxy' ) }
+        => 'WSDL proxy' );
+lives_ok( sub { $loader->wsdl->compileCalls() } => 'compileCalls' );
 
 cmp_bag(
-    [ keys %{ $wsdl->proxy->index } ],
+    [ keys %{ $loader->wsdl->index } ],
     [qw(binding message port portType service)] => 'WSDL definition classes',
 );
 cmp_bag(
-    [ map { $_->name } $wsdl->proxy->operations ],
+    [ map { $_->name } $loader->wsdl->operations ],
     [qw(GetLastTradePrice)] => 'WSDL operations',
 );
 

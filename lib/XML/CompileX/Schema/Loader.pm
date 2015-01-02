@@ -37,13 +37,13 @@ has options => (
     default => sub { { allow_undeclared => 1 } },
 );
 
-has proxy => (
+has wsdl => (
     is       => 'lazy',
     isa      => InstanceOf ['XML::Compile::WSDL11'],
     init_arg => undef,
 );
 
-sub _build_proxy {
+sub _build_wsdl {
     my $self = shift;
 
     my @uri   = @{ $self->uris };
@@ -75,7 +75,7 @@ const my %IMPORT_ATTR => (
 );
 
 sub _build_proxy_cache {
-    my ( $self, $proxy, @locations ) = @_;
+    my ( $self, $wsdl, @locations ) = @_;
 
     my $cache = $self->cache;
 
@@ -86,9 +86,9 @@ sub _build_proxy_cache {
         $cache->set( $uri->as_string => $document->toString );
 
         if ( 'definitions' eq $document->documentElement->getName ) {
-            $proxy->addWSDL($content_ref);
+            $wsdl->addWSDL($content_ref);
         }
-        $proxy->importDefinitions($content_ref);
+        $wsdl->importDefinitions($content_ref);
 
         my @imports;
         while ( my ( $attr, $ns ) = each %IMPORT_ATTR ) {
@@ -97,11 +97,11 @@ sub _build_proxy_cache {
                 $document->getElementsByTagNameNS( $ns => 'import' );
         }
         if (@imports) {
-            $proxy = $self->_build_proxy_cache( $proxy, @imports );
+            $wsdl = $self->_build_proxy_cache( $wsdl, @imports );
         }
         undef $document;
     }
-    return $proxy;
+    return $wsdl;
 }
 
 has uris => (
@@ -142,10 +142,10 @@ __END__
 
     use XML::CompileX::Schema::Loader;
 
-    my $wsdl = XML::CompileX::Schema::Loader->new(
+    my $loader = XML::CompileX::Schema::Loader->new(
                 uris => 'http://example.com/foo.wsdl' );
-    $wsdl->proxy->compileCalls();
-    my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );
+    $loader->wsdl->compileCalls();
+    my ( $answer, $trace ) = $loader->wsdl->call( hello => {name => 'Joe'} );
 
 =head1 DESCRIPTION
 
@@ -168,7 +168,7 @@ to tell you how!)
 
 This module implements that work-around, recursively parsing and compiling a
 WSDL specification and any imported definitions and schemas. The wrapped WSDL
-is available as a C<proxy> attribute.
+is available as a C<wsdl> attribute.
 
 It also provides a hook to use any L<CHI|CHI> driver so that retrieved files
 may be cached locally, reducing dependence on network-accessible definitions.
@@ -194,7 +194,7 @@ L<XML::Compile::WSDL11|XML::Compile::WSDL11> constructor. Defaults to:
 
     { allow_undeclared => 1 }
  
-=attr proxy
+=attr wsdl
 
 Retrieves the resulting L<XML::Compile::WSDL11|XML::Compile::WSDL11> object.
 Any definitions are retrieved and compiled on first access to this attribute.
@@ -209,4 +209,4 @@ that points to WSDL file(s) to compile.
 =attr user_agent
 
 Optional instance of an L<LWP::UserAgent|LWP::UserAgent> that will be used to
-get all WSDL and XSD content when the proxy cache is built.
+get all WSDL and XSD content when the cache is built.

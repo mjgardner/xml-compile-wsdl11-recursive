@@ -1,16 +1,16 @@
 # NAME
 
-XML::Compile::WSDL11::Recursive - Recursively compile a web service proxy
+XML::CompileX::Schema::Loader - Recursively compile a web service proxy
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
-    use XML::Compile::WSDL11::Recursive;
+    use XML::CompileX::Schema::Loader;
 
-    my $wsdl = XML::Compile::WSDL11::Recursive->new(
+    my $wsdl = XML::CompileX::Schema::Loader->new(
                 uri => 'http://example.com/foo.wsdl' );
     $wsdl->proxy->compileCalls();
     my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );
@@ -82,7 +82,7 @@ get all WSDL and XSD content when the proxy cache is built.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc XML::Compile::WSDL11::Recursive
+    perldoc XML::CompileX::Schema::Loader
 
 ## Websites
 
@@ -93,55 +93,55 @@ in addition to those websites please use your favorite search engine to discover
 
     A modern, open-source CPAN search engine, useful to view POD in HTML format.
 
-    [http://metacpan.org/release/XML-Compile-WSDL11-Recursive](http://metacpan.org/release/XML-Compile-WSDL11-Recursive)
+    [http://metacpan.org/release/XML-CompileX-Schema-Loader](http://metacpan.org/release/XML-CompileX-Schema-Loader)
 
 - Search CPAN
 
     The default CPAN search engine, useful to view POD in HTML format.
 
-    [http://search.cpan.org/dist/XML-Compile-WSDL11-Recursive](http://search.cpan.org/dist/XML-Compile-WSDL11-Recursive)
+    [http://search.cpan.org/dist/XML-CompileX-Schema-Loader](http://search.cpan.org/dist/XML-CompileX-Schema-Loader)
 
 - AnnoCPAN
 
     The AnnoCPAN is a website that allows community annotations of Perl module documentation.
 
-    [http://annocpan.org/dist/XML-Compile-WSDL11-Recursive](http://annocpan.org/dist/XML-Compile-WSDL11-Recursive)
+    [http://annocpan.org/dist/XML-CompileX-Schema-Loader](http://annocpan.org/dist/XML-CompileX-Schema-Loader)
 
 - CPAN Ratings
 
     The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
 
-    [http://cpanratings.perl.org/d/XML-Compile-WSDL11-Recursive](http://cpanratings.perl.org/d/XML-Compile-WSDL11-Recursive)
+    [http://cpanratings.perl.org/d/XML-CompileX-Schema-Loader](http://cpanratings.perl.org/d/XML-CompileX-Schema-Loader)
 
 - CPAN Forum
 
     The CPAN Forum is a web forum for discussing Perl modules.
 
-    [http://cpanforum.com/dist/XML-Compile-WSDL11-Recursive](http://cpanforum.com/dist/XML-Compile-WSDL11-Recursive)
+    [http://cpanforum.com/dist/XML-CompileX-Schema-Loader](http://cpanforum.com/dist/XML-CompileX-Schema-Loader)
 
 - CPANTS
 
     The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
 
-    [http://cpants.cpanauthors.org/dist/XML-Compile-WSDL11-Recursive](http://cpants.cpanauthors.org/dist/XML-Compile-WSDL11-Recursive)
+    [http://cpants.cpanauthors.org/dist/XML-CompileX-Schema-Loader](http://cpants.cpanauthors.org/dist/XML-CompileX-Schema-Loader)
 
 - CPAN Testers
 
     The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
 
-    [http://www.cpantesters.org/distro/X/XML-Compile-WSDL11-Recursive](http://www.cpantesters.org/distro/X/XML-Compile-WSDL11-Recursive)
+    [http://www.cpantesters.org/distro/X/XML-CompileX-Schema-Loader](http://www.cpantesters.org/distro/X/XML-CompileX-Schema-Loader)
 
 - CPAN Testers Matrix
 
     The CPAN Testers Matrix is a website that provides a visual overview of the test results for a distribution on various Perls/platforms.
 
-    [http://matrix.cpantesters.org/?dist=XML-Compile-WSDL11-Recursive](http://matrix.cpantesters.org/?dist=XML-Compile-WSDL11-Recursive)
+    [http://matrix.cpantesters.org/?dist=XML-CompileX-Schema-Loader](http://matrix.cpantesters.org/?dist=XML-CompileX-Schema-Loader)
 
 - CPAN Testers Dependencies
 
     The CPAN Testers Dependencies is a website that shows a chart of the test results of all dependencies for a distribution.
 
-    [http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive](http://deps.cpantesters.org/?module=XML::Compile::WSDL11::Recursive)
+    [http://deps.cpantesters.org/?module=XML::CompileX::Schema::Loader](http://deps.cpantesters.org/?module=XML::CompileX::Schema::Loader)
 
 ## Bugs / Feature Requests
 

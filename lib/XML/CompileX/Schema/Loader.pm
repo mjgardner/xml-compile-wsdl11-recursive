@@ -1,4 +1,4 @@
-package XML::Compile::WSDL11::Recursive;
+package XML::CompileX::Schema::Loader;
 
 use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 
@@ -128,9 +128,9 @@ __END__
 
 =head1 SYNOPSIS
 
-    use XML::Compile::WSDL11::Recursive;
+    use XML::CompileX::Schema::Loader;
 
-    my $wsdl = XML::Compile::WSDL11::Recursive->new(
+    my $wsdl = XML::CompileX::Schema::Loader->new(
                 uri => 'http://example.com/foo.wsdl' );
     $wsdl->proxy->compileCalls();
     my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );

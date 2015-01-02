@@ -8,7 +8,7 @@ use HTTP::Status qw(:constants status_message);
 use Path::Tiny;
 use URI;
 use URI::file;
-use XML::Compile::WSDL11::Recursive;
+use XML::CompileX::Schema::Loader;
 
 #use Log::Report mode => 'DEBUG';
 
@@ -16,7 +16,7 @@ my $user_agent = Test::LWP::UserAgent->new( network_fallback => 1 );
 $user_agent->map_response( 'example.com' => \&examplecom_responder );
 
 my $wsdl = new_ok(
-    'XML::Compile::WSDL11::Recursive' => [
+    'XML::CompileX::Schema::Loader' => [
         uri => URI::file->new_abs('t/stockquote/stockquoteservice.wsdl'),
         user_agent => $user_agent,
     ],

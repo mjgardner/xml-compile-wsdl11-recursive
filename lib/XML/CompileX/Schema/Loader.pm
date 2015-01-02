@@ -7,7 +7,6 @@ use utf8;
 use Moo;
 use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
 use CHI;
-use Const::Fast;
 use HTTP::Exception;
 use LWP::UserAgent;
 use URI;
@@ -60,7 +59,7 @@ sub _build_wsdl {
     }
 
     # cache and collect imports
-    for (@uri) { $wsdl = $self->_build_proxy_cache( $wsdl, $_ ) }
+    for (@uri) { $wsdl = $self->_do_imports( $wsdl, $_ ) }
     $wsdl->importDefinitions(
         $cache->get_multi_arrayref(
             [ grep { $cache->is_valid($_) } $cache->get_keys ],
@@ -69,12 +68,7 @@ sub _build_wsdl {
     return $wsdl;
 }
 
-const my %IMPORT_ATTR => (
-    schemaLocation => SCHEMA2001,
-    location       => WSDL11,
-);
-
-sub _build_proxy_cache {
+sub _do_imports {
     my ( $self, $wsdl, @locations ) = @_;
 
     my $cache = $self->cache;
@@ -82,26 +76,30 @@ sub _build_proxy_cache {
     for my $uri ( grep { not $cache->is_valid( $_->as_string ) } @locations )
     {
         my $content_ref = $self->_get_uri_content_ref($uri);
-        my $document = XML::LibXML->load_xml( string => $content_ref );
-        $cache->set( $uri->as_string => $document->toString );
+        my $doc = XML::LibXML->load_xml( string => $content_ref );
+        $cache->set( $uri->as_string => $doc->toString );
 
-        if ( 'definitions' eq $document->documentElement->getName ) {
+        if ( 'definitions' eq $doc->documentElement->getName ) {
             $wsdl->addWSDL($content_ref);
         }
         $wsdl->importDefinitions($content_ref);
 
-        my @imports;
-        while ( my ( $attr, $ns ) = each %IMPORT_ATTR ) {
-            push @imports,
-                map { URI->new_abs( $_->getAttribute($attr), $uri ) }
-                $document->getElementsByTagNameNS( $ns => 'import' );
-        }
-        if (@imports) {
-            $wsdl = $self->_build_proxy_cache( $wsdl, @imports );
-        }
-        undef $document;
+        my @imports = (
+            _collect( 'location', $uri, $doc, WSDL11, 'import' ),
+            map { _collect( 'schemaLocation', $uri, $doc, SCHEMA2001, $_ ) }
+                qw(import include),
+        );
+        if (@imports) { $wsdl = $self->_do_imports( $wsdl, @imports ) }
+        undef $doc;
     }
     return $wsdl;
+}
+
+sub _collect {
+    my ( $attr, $uri, $document, $ns, $element ) = @_;
+    return
+        map { URI->new_abs( $_->getAttribute($attr), $uri ) }
+        $document->getElementsByTagNameNS( $ns => $element );
 }
 
 has uris => (

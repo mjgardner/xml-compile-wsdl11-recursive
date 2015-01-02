@@ -7,6 +7,7 @@ use utf8;
 use Moo;
 use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
 use CHI;
+use Const::Fast;
 use HTTP::Exception;
 use LWP::UserAgent;
 use URI;
@@ -68,6 +69,11 @@ sub _build_proxy {
     return $wsdl;
 }
 
+const my %IMPORT_ATTR => (
+    schemaLocation => SCHEMA2001,
+    location       => WSDL11,
+);
+
 sub _build_proxy_cache {
     my ( $self, $proxy, @locations ) = @_;
 
@@ -84,16 +90,13 @@ sub _build_proxy_cache {
         }
         $proxy->importDefinitions($content_ref);
 
-        if ( my @imports
-            = map { URI->new_abs( $_->getAttribute('schemaLocation'), $uri ) }
-            $document->getElementsByTagNameNS( (SCHEMA2001) => 'import' ) )
-        {
-            $proxy = $self->_build_proxy_cache( $proxy, @imports );
+        my @imports;
+        while ( my ( $attr, $ns ) = each %IMPORT_ATTR ) {
+            push @imports,
+                map { URI->new_abs( $_->getAttribute($attr), $uri ) }
+                $document->getElementsByTagNameNS( $ns => 'import' );
         }
-        if ( my @imports
-            = map { URI->new_abs( $_->getAttribute('location'), $uri ) }
-            $document->getElementsByTagNameNS( (WSDL11) => 'import' ) )
-        {
+        if (@imports) {
             $proxy = $self->_build_proxy_cache( $proxy, @imports );
         }
         undef $document;

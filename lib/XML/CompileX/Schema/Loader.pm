@@ -5,7 +5,7 @@ use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 # VERSION
 use utf8;
 use Moo;
-use MooX::Types::MooseLike::Base qw(HashRef InstanceOf);
+use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
 use CHI;
 use HTTP::Exception;
 use LWP::UserAgent;
@@ -19,7 +19,7 @@ use XML::LibXML;
 
 has cache => (
     is       => 'lazy',
-    isa      => InstanceOf('CHI::Driver'),
+    isa      => InstanceOf ['CHI::Driver'],
     init_arg => undef,
     default  => sub { CHI->new( %{ shift->cache_parameters } ) },
 );
@@ -38,29 +38,34 @@ has options => (
 
 has proxy => (
     is       => 'lazy',
-    isa      => InstanceOf('XML::Compile::WSDL11'),
+    isa      => InstanceOf ['XML::Compile::WSDL11'],
     init_arg => undef,
 );
 
 sub _build_proxy {
     my $self = shift;
 
-    my $uri   = $self->uri;
+    my @uri   = @{ $self->uris };
     my $cache = $self->cache;
 
-    my $proxy = $self->_build_proxy_cache(
-        XML::Compile::WSDL11->new(
-            $self->_get_uri_content_ref($uri),
-            %{ $self->options },
-        ),
-        $uri,
+    # collect initial set of definitions
+    my $wsdl = XML::Compile::WSDL11->new(
+        $self->_get_uri_content_ref( $uri[0] ),
+        %{ $self->options },
     );
-    $proxy->importDefinitions(
+    for ( @uri[ 1 .. $#uri ] ) {
+        $wsdl->addWSDL( $self->_get_uri_content_ref($_),
+            %{ $self->options } );
+    }
+
+    # cache and collect imports
+    for (@uri) { $wsdl = $self->_build_proxy_cache( $wsdl, $_ ) }
+    $wsdl->importDefinitions(
         $cache->get_multi_arrayref(
             [ grep { $cache->is_valid($_) } $cache->get_keys ],
         ),
     );
-    return $proxy;
+    return $wsdl;
 }
 
 sub _build_proxy_cache {
@@ -96,16 +101,20 @@ sub _build_proxy_cache {
     return $proxy;
 }
 
-has uri => (
+has uris => (
     is       => 'ro',
-    isa      => InstanceOf('URI'),
+    isa      => ArrayRef [ InstanceOf ['URI'] ],
     required => 1,
-    coerce   => sub { URI->new( $_[0] ) },
+    coerce   => sub {
+        'ARRAY' eq ref $_[0]
+            ? [ map { URI->new($_) } $_[0] ]
+            : [ URI->new( $_[0] ) ];
+    },
 );
 
 has user_agent => (
     is      => 'lazy',
-    isa     => InstanceOf('LWP::UserAgent'),
+    isa     => InstanceOf ['LWP::UserAgent'],
     default => sub { LWP::UserAgent->new() },
 );
 
@@ -131,7 +140,7 @@ __END__
     use XML::CompileX::Schema::Loader;
 
     my $wsdl = XML::CompileX::Schema::Loader->new(
-                uri => 'http://example.com/foo.wsdl' );
+                uris => 'http://example.com/foo.wsdl' );
     $wsdl->proxy->compileCalls();
     my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );
 
@@ -189,9 +198,10 @@ Any definitions are retrieved and compiled on first access to this attribute.
 If there are problems retrieving any files, an
 L<HTTP::Exception|HTTP::Exception> is thrown with the details.
 
-=attr uri
+=attr uris
 
-Required string or L<URI|URI> object pointing to a WSDL file to compile.
+Required string or L<URI|URI> object, or a reference to an array of the same,
+that points to WSDL file(s) to compile.
 
 =attr user_agent
 

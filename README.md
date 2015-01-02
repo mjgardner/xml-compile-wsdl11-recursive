@@ -11,7 +11,7 @@ version 0.002
     use XML::CompileX::Schema::Loader;
 
     my $wsdl = XML::CompileX::Schema::Loader->new(
-                uri => 'http://example.com/foo.wsdl' );
+                uris => 'http://example.com/foo.wsdl' );
     $wsdl->proxy->compileCalls();
     my ( $answer, $trace ) = $wsdl->proxy->call( hello => {name => 'Joe'} );
 
@@ -67,9 +67,10 @@ Any definitions are retrieved and compiled on first access to this attribute.
 If there are problems retrieving any files, an
 [HTTP::Exception](https://metacpan.org/pod/HTTP::Exception) is thrown with the details.
 
-## uri
+## uris
 
-Required string or [URI](https://metacpan.org/pod/URI) object pointing to a WSDL file to compile.
+Required string or [URI](https://metacpan.org/pod/URI) object, or a reference to an array of the same,
+that points to WSDL file(s) to compile.
 
 ## user\_agent
 

@@ -17,7 +17,7 @@ $user_agent->map_response( 'example.com' => \&examplecom_responder );
 
 my $wsdl = new_ok(
     'XML::CompileX::Schema::Loader' => [
-        uri => URI::file->new_abs('t/stockquote/stockquoteservice.wsdl'),
+        uris => URI::file->new_abs('t/stockquote/stockquoteservice.wsdl'),
         user_agent => $user_agent,
     ],
     'stockquoteservice WSDL',

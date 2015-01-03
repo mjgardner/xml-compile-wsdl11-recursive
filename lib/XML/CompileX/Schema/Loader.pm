@@ -22,6 +22,23 @@ has options => (
     default => sub { { allow_undeclared => 1 } },
 );
 
+has uris => (
+    is       => 'ro',
+    isa      => ArrayRef [ InstanceOf ['URI'] ],
+    required => 1,
+    coerce   => sub {
+        'ARRAY' eq ref $_[0]
+            ? [ map { URI->new($_) } $_[0] ]
+            : [ URI->new( $_[0] ) ];
+    },
+);
+
+has user_agent => (
+    is      => 'lazy',
+    isa     => InstanceOf ['LWP::UserAgent'],
+    default => sub { LWP::UserAgent->new },
+);
+
 has wsdl => (
     is       => 'lazy',
     isa      => InstanceOf ['XML::Compile::WSDL11'],
@@ -48,11 +65,7 @@ sub _build_wsdl {
     return $wsdl;
 }
 
-has _imports => (
-    is      => 'rw',
-    isa     => HashRef,
-    default => sub { {} },
-);
+has _imports => ( is => 'rw', isa => HashRef, default => sub { {} } );
 
 sub _do_imports {
     my ( $self, $wsdl, @locations ) = @_;
@@ -87,23 +100,6 @@ sub _collect {
         map { URI->new_abs( $_->getAttribute($attr), $uri ) }
         $document->getElementsByTagNameNS( $ns => $element );
 }
-
-has uris => (
-    is       => 'ro',
-    isa      => ArrayRef [ InstanceOf ['URI'] ],
-    required => 1,
-    coerce   => sub {
-        'ARRAY' eq ref $_[0]
-            ? [ map { URI->new($_) } $_[0] ]
-            : [ URI->new( $_[0] ) ];
-    },
-);
-
-has user_agent => (
-    is      => 'lazy',
-    isa     => InstanceOf ['LWP::UserAgent'],
-    default => sub { LWP::UserAgent->new },
-);
 
 sub _get_uri_content_ref {
     my ( $self, $uri ) = @_;

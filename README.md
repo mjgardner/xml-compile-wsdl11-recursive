@@ -34,24 +34,13 @@ This module implements that work-around, recursively parsing and compiling a
 WSDL specification and any imported definitions and schemas. The wrapped WSDL
 is available as a `wsdl` attribute.
 
-It also provides a hook to use any [CHI](https://metacpan.org/pod/CHI) driver so that retrieved files
-may be cached locally, reducing dependence on network-accessible definitions.
-
 You may also provide your own [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent) (sub)class
 instance, possibly to correct on-the-fly any broken interreferences between
-files as warned above.
+files as warned above.  You can also provide a caching layer, as with
+[WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached) which is a sub-class of
+[WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize) and [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent).
 
 # ATTRIBUTES
-
-## cache
-
-A read-only reference to the underlying [CHI::Driver](https://metacpan.org/pod/CHI::Driver) object used
-to cache schemas.
-
-## cache\_parameters
-
-A hash reference settable at construction to pass parameters to the [CHI](https://metacpan.org/pod/CHI)
-module used to cache schemas.  By default nothing is cached.
 
 ## options
 
@@ -75,7 +64,7 @@ that points to WSDL file(s) to compile.
 ## user\_agent
 
 Optional instance of an [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent) that will be used to
-get all WSDL and XSD content when the cache is built.
+get all WSDL and XSD content.
 
 # SUPPORT
 

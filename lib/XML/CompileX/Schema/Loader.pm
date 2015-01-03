@@ -6,7 +6,6 @@ use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 use utf8;
 use Moo;
 use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
-use CHI;
 use HTTP::Exception;
 use LWP::UserAgent;
 use URI;
@@ -16,19 +15,6 @@ use XML::Compile::Transport::SOAPHTTP;
 use XML::Compile::Util 'SCHEMA2001';
 use XML::Compile::SOAP::Util 'WSDL11';
 use XML::LibXML;
-
-has cache => (
-    is       => 'lazy',
-    isa      => InstanceOf ['CHI::Driver'],
-    init_arg => undef,
-    default  => sub { CHI->new( %{ shift->cache_parameters } ) },
-);
-
-has cache_parameters => (
-    is      => 'ro',
-    isa     => HashRef,
-    default => sub { { driver => 'Null' } },
-);
 
 has options => (
     is      => 'ro',
@@ -44,9 +30,7 @@ has wsdl => (
 
 sub _build_wsdl {
     my $self = shift;
-
-    my @uri   = @{ $self->uris };
-    my $cache = $self->cache;
+    my @uri  = @{ $self->uris };
 
     # collect initial set of definitions
     my $wsdl = XML::Compile::WSDL11->new(
@@ -58,26 +42,28 @@ sub _build_wsdl {
             %{ $self->options } );
     }
 
-    # cache and collect imports
+    # collect imports
     for (@uri) { $wsdl = $self->_do_imports( $wsdl, $_ ) }
-    $wsdl->importDefinitions(
-        $cache->get_multi_arrayref(
-            [ grep { $cache->is_valid($_) } $cache->get_keys ],
-        ),
-    );
+    $wsdl->importDefinitions( [ values %{ $self->_imports } ] );
     return $wsdl;
 }
+
+has _imports => (
+    is      => 'rw',
+    isa     => HashRef,
+    default => sub { {} },
+);
 
 sub _do_imports {
     my ( $self, $wsdl, @locations ) = @_;
 
-    my $cache = $self->cache;
-
-    for my $uri ( grep { not $cache->is_valid( $_->as_string ) } @locations )
+    for my $uri ( grep { not exists $self->_imports->{ $_->as_string } }
+        @locations )
     {
         my $content_ref = $self->_get_uri_content_ref($uri);
         my $doc = XML::LibXML->load_xml( string => $content_ref );
-        $cache->set( $uri->as_string => $doc->toString );
+        $self->_imports(
+            +{ %{ $self->_imports }, $uri->as_string => $content_ref } );
 
         if ( 'definitions' eq $doc->documentElement->getName ) {
             $wsdl->addWSDL($content_ref);
@@ -116,7 +102,7 @@ has uris => (
 has user_agent => (
     is      => 'lazy',
     isa     => InstanceOf ['LWP::UserAgent'],
-    default => sub { LWP::UserAgent->new() },
+    default => sub { LWP::UserAgent->new },
 );
 
 sub _get_uri_content_ref {
@@ -168,22 +154,11 @@ This module implements that work-around, recursively parsing and compiling a
 WSDL specification and any imported definitions and schemas. The wrapped WSDL
 is available as a C<wsdl> attribute.
 
-It also provides a hook to use any L<CHI|CHI> driver so that retrieved files
-may be cached locally, reducing dependence on network-accessible definitions.
-
 You may also provide your own L<LWP::UserAgent|LWP::UserAgent> (sub)class
 instance, possibly to correct on-the-fly any broken interreferences between
-files as warned above.
-
-=attr cache
-
-A read-only reference to the underlying L<CHI::Driver|CHI::Driver> object used
-to cache schemas.
-
-=attr cache_parameters
-
-A hash reference settable at construction to pass parameters to the L<CHI|CHI>
-module used to cache schemas.  By default nothing is cached.
+files as warned above.  You can also provide a caching layer, as with
+L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> which is a sub-class of
+L<WWW::Mechanize|WWW::Mechanize> and L<LWP::UserAgent|LWP::UserAgent>.
 
 =attr options
 
@@ -207,4 +182,4 @@ that points to WSDL file(s) to compile.
 =attr user_agent
 
 Optional instance of an L<LWP::UserAgent|LWP::UserAgent> that will be used to
-get all WSDL and XSD content when the cache is built.
+get all WSDL and XSD content.

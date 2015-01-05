@@ -114,7 +114,7 @@ sub _get_uri_content_ref {
 
 1;
 
-# ABSTRACT: Recursively compile a web service proxy
+# ABSTRACT: Load a web service and its dependent schema for XML::Compile::WSDL11
 
 __END__
 

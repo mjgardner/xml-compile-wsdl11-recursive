@@ -1,6 +1,11 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
 {{$NEXT}}
-
+    - Renamed from XML::Compile::WSDL11::Recursive to
+      XML::CompileX::Schema::Loader per suggestion from Mark Overmeer
+    - Remove not-quite-there caching in favor of just letting the specified
+      user_agent handle it (e.g., with WWW::Mechanize::Cached)
+    - support adding multiple WSDLs on construction
+    - handle both schema include and import statements
 0.001     2015-01-01 16:04:27-05:00 America/New_York (TRIAL RELEASE)
-    Initial release
+    - Initial release

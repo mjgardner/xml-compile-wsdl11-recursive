@@ -146,7 +146,7 @@ in addition to those websites please use your favorite search engine to discover
 
 Please report any bugs or feature requests through the web
 interface at
-[https://github.com/mjgardner/xml-compile-wsdl11-recursive/issues](https://github.com/mjgardner/xml-compile-wsdl11-recursive/issues).
+[https://github.com/mjgardner/xml-compilex-schema-loader/issues](https://github.com/mjgardner/xml-compilex-schema-loader/issues).
 You will be automatically notified of any progress on the
 request by the system.
 
@@ -158,7 +158,7 @@ from your repository :)
 
 [https://github.com/mjgardner/xml-compilex-schema-loader](https://github.com/mjgardner/xml-compilex-schema-loader)
 
-    git clone git://github.com/mjgardner/xml-compilex-schema-loader.git
+    https://github.com/mjgardner/xml-compilex-schema-loader.git
 
 # AUTHOR
 

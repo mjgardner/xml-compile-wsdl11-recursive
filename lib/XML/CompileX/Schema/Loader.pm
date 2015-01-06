@@ -7,6 +7,7 @@ use utf8;
 use Moo;
 use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
 use HTTP::Exception;
+use List::MoreUtils 'uniq';
 use LWP::UserAgent;
 use URI;
 use XML::Compile::WSDL11;
@@ -16,19 +17,13 @@ use XML::Compile::Util 'SCHEMA2001';
 use XML::Compile::SOAP::Util 'WSDL11';
 use XML::LibXML;
 
-has options => (
-    is      => 'ro',
-    isa     => HashRef,
-    default => sub { { allow_undeclared => 1 } },
-);
-
 has uris => (
-    is       => 'ro',
+    is       => 'rwp',
     isa      => ArrayRef [ InstanceOf ['URI'] ],
     required => 1,
     coerce   => sub {
         'ARRAY' eq ref $_[0]
-            ? [ map { URI->new($_) } $_[0] ]
+            ? [ map { URI->new($_) } @{ $_[0] } ]
             : [ URI->new( $_[0] ) ];
     },
 );
@@ -39,28 +34,27 @@ has user_agent => (
     default => sub { LWP::UserAgent->new },
 );
 
-has wsdl => (
-    is       => 'lazy',
-    isa      => InstanceOf ['XML::Compile::WSDL11'],
-    init_arg => undef,
-);
+has wsdl => ( is => 'lazy', isa => InstanceOf ['XML::Compile::WSDL11'] );
 
 sub _build_wsdl {
     my $self = shift;
-    my @uri  = @{ $self->uris };
-
-    # collect initial set of definitions
     my $wsdl = XML::Compile::WSDL11->new(
-        $self->_get_uri_content_ref( $uri[0] ),
-        %{ $self->options },
-    );
-    for ( @uri[ 1 .. $#uri ] ) {
-        $wsdl->addWSDL( $self->_get_uri_content_ref($_),
-            %{ $self->options } );
+        $self->_get_uri_content_ref( $self->uris->[0] ) );
+    for ( $self->uris->[ 1 .. $#{ $self->uris } ] ) {
+        $wsdl->addWSDL( $self->_get_uri_content_ref($_) );
     }
+    return $wsdl;
+}
 
-    # collect imports
-    for (@uri) { $wsdl = $self->_do_imports( $wsdl, $_ ) }
+sub collect_imports {
+    my ( $self, @uri ) = @_;
+    my $wsdl = $self->wsdl;
+    $self->_set_uris(
+        [ @uri = uniq @uri, map { $_->as_string } @{ $self->uris } ] );
+    for my $uri ( @{ $self->uris } ) {
+        $wsdl->addWSDL( $self->_get_uri_content_ref($uri) );
+        $wsdl = $self->_do_imports( $wsdl, $uri );
+    }
     $wsdl->importDefinitions( [ values %{ $self->_imports } ] );
     return $wsdl;
 }
@@ -114,18 +108,24 @@ sub _get_uri_content_ref {
 
 1;
 
-# ABSTRACT: Load a web service and its dependent schema for XML::Compile::WSDL11
+# ABSTRACT: Load a web service and its dependencies for XML::Compile::WSDL11
 
 __END__
 
 =head1 SYNOPSIS
 
+    use XML::Compile::WSDL11;
     use XML::CompileX::Schema::Loader;
+    use LWP::Simple 'get';
 
+    my $wsdl   = XML::Compile::WSDL11->new(get('http://example.com/foo.wsdl'));
     my $loader = XML::CompileX::Schema::Loader->new(
-                uris => 'http://example.com/foo.wsdl' );
-    $loader->wsdl->compileCalls();
-    my ( $answer, $trace ) = $loader->wsdl->call( hello => {name => 'Joe'} );
+        wsdl => $wsdl,
+        uris => 'http://example.com/foo.wsdl',
+    );
+    $loader->collect_imports;
+    $wsdl->compileCalls;
+    my ( $answer, $trace ) = $wsdl->call( hello => {name => 'Joe'} );
 
 =head1 DESCRIPTION
 
@@ -156,18 +156,11 @@ files as warned above.  You can also provide a caching layer, as with
 L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> which is a sub-class of
 L<WWW::Mechanize|WWW::Mechanize> and L<LWP::UserAgent|LWP::UserAgent>.
 
-=attr options
-
-Optional hash reference of additional parameters to pass to the
-L<XML::Compile::WSDL11|XML::Compile::WSDL11> constructor. Defaults to:
-
-    { allow_undeclared => 1 }
- 
 =attr wsdl
 
-Retrieves the resulting L<XML::Compile::WSDL11|XML::Compile::WSDL11> object.
-Any definitions are retrieved and compiled on first access to this attribute.
-If there are problems retrieving any files, an
+An L<XML::Compile::WSDL11|XML::Compile::WSDL11> instance. If you do not set
+this, a generic instance will be created with the XML from the URIs in C<uris>
+added. If there are problems retrieving any files, an
 L<HTTP::Exception|HTTP::Exception> is thrown with the details.
 
 =attr uris
@@ -179,3 +172,11 @@ that points to WSDL file(s) to compile.
 
 Optional instance of an L<LWP::UserAgent|LWP::UserAgent> that will be used to
 get all WSDL and XSD content.
+
+=method collect_imports
+
+Loops through all C<uris>, adding them as WSDL documents to C<wsdl> and then
+importing all definitions, schemas, included and imported definition and schema
+locations.  You should call this before calling any of the L<compilers in
+XML::Compile::WSDL11|XML::Compile::WSDL11/Compilers> to ensure that any
+dependencies have been imported.

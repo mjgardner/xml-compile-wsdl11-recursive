@@ -1,6 +1,6 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
-{{$NEXT}}
+0.002     2015-01-06 12:00:22-08:00 America/Los_Angeles
     - Renamed from XML::Compile::WSDL11::Recursive to
       XML::CompileX::Schema::Loader per suggestion from Mark Overmeer
     - Remove not-quite-there caching in favor of just letting the specified

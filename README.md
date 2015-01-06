@@ -1,6 +1,6 @@
 # NAME
 
-XML::CompileX::Schema::Loader - Recursively compile a web service proxy
+XML::CompileX::Schema::Loader - Load a web service and its dependencies for XML::Compile::WSDL11
 
 # VERSION
 
@@ -8,12 +8,18 @@ version 0.002
 
 # SYNOPSIS
 
+    use XML::Compile::WSDL11;
     use XML::CompileX::Schema::Loader;
+    use LWP::Simple 'get';
 
+    my $wsdl   = XML::Compile::WSDL11->new(get('http://example.com/foo.wsdl'));
     my $loader = XML::CompileX::Schema::Loader->new(
-                uris => 'http://example.com/foo.wsdl' );
-    $loader->wsdl->compileCalls();
-    my ( $answer, $trace ) = $loader->wsdl->call( hello => {name => 'Joe'} );
+        wsdl => $wsdl,
+        uris => 'http://example.com/foo.wsdl',
+    );
+    $loader->collect_imports;
+    $wsdl->compileCalls;
+    my ( $answer, $trace ) = $wsdl->call( hello => {name => 'Joe'} );
 
 # DESCRIPTION
 
@@ -42,18 +48,11 @@ files as warned above.  You can also provide a caching layer, as with
 
 # ATTRIBUTES
 
-## options
-
-Optional hash reference of additional parameters to pass to the
-[XML::Compile::WSDL11](https://metacpan.org/pod/XML::Compile::WSDL11) constructor. Defaults to:
-
-    { allow_undeclared => 1 }
-
 ## wsdl
 
-Retrieves the resulting [XML::Compile::WSDL11](https://metacpan.org/pod/XML::Compile::WSDL11) object.
-Any definitions are retrieved and compiled on first access to this attribute.
-If there are problems retrieving any files, an
+An [XML::Compile::WSDL11](https://metacpan.org/pod/XML::Compile::WSDL11) instance. If you do not set
+this, a generic instance will be created with the XML from the URIs in `uris`
+added. If there are problems retrieving any files, an
 [HTTP::Exception](https://metacpan.org/pod/HTTP::Exception) is thrown with the details.
 
 ## uris
@@ -65,6 +64,16 @@ that points to WSDL file(s) to compile.
 
 Optional instance of an [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent) that will be used to
 get all WSDL and XSD content.
+
+# METHODS
+
+## collect\_imports
+
+Loops through all `uris`, adding them as WSDL documents to `wsdl` and then
+importing all definitions, schemas, included and imported definition and schema
+locations.  You should call this before calling any of the [compilers in
+XML::Compile::WSDL11](https://metacpan.org/pod/XML::Compile::WSDL11#Compilers) to ensure that any
+dependencies have been imported.
 
 # SUPPORT
 
@@ -147,9 +156,9 @@ The code is open to the world, and available for you to hack on. Please feel fre
 with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
 from your repository :)
 
-[https://github.com/mjgardner/xml-compile-wsdl11-recursive](https://github.com/mjgardner/xml-compile-wsdl11-recursive)
+[https://github.com/mjgardner/xml-compilex-schema-loader](https://github.com/mjgardner/xml-compilex-schema-loader)
 
-    git clone git://github.com/mjgardner/xml-compile-wsdl11-recursive.git
+    git clone git://github.com/mjgardner/xml-compilex-schema-loader.git
 
 # AUTHOR
 

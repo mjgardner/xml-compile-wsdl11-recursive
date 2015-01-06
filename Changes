@@ -5,7 +5,9 @@ Revision history for perl module XML::CompileX::Schema::Loader
       XML::CompileX::Schema::Loader per suggestion from Mark Overmeer
     - Remove not-quite-there caching in favor of just letting the specified
       user_agent handle it (e.g., with WWW::Mechanize::Cached)
-    - support adding multiple WSDLs on construction
+    - support adding multiple WSDL URIs on construction
     - handle both schema include and import statements
+    - rewrite to work alongside XML::Compile::WSDL11 rather than using
+      an attribute as a proxy object
 0.001     2015-01-01 16:04:27-05:00 America/New_York (TRIAL RELEASE)
     - Initial release

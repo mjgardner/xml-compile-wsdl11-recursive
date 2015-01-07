@@ -1,6 +1,6 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
-{{$NEXT}}
+0.003     2015-01-06 16:19:50-08:00 America/Los_Angeles
 
 0.002     2015-01-06 13:45:40-08:00 America/Los_Angeles (TRIAL RELEASE)
     - Renamed from XML::Compile::WSDL11::Recursive to

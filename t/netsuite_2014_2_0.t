@@ -8,6 +8,7 @@ use Const::Fast;
 use Test::TempDir::Tiny;
 use WWW::Mechanize::Cached;
 use XML::Compile::WSDL11;
+use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
 use XML::CompileX::Schema::Loader;
 
@@ -24,11 +25,7 @@ SKIP: {
         cache => CHI->new( driver => 'File', root_dir => $cache_dir ) );
     my $transport
         = XML::Compile::Transport::SOAPHTTP->new( user_agent => $user_agent );
-    my $wsdl = XML::Compile::WSDL11->new(
-        $user_agent->get($SUITETALK_WSDL)
-            ->decoded_content( ref => 1, raise_error => 1 ),
-        allow_undeclared => 1,
-    );
+    my $wsdl = XML::Compile::WSDL11->new;
 
     my $loader = new_ok(
         'XML::CompileX::Schema::Loader' => [

@@ -10,6 +10,7 @@ use Path::Tiny;
 use URI;
 use URI::file;
 use XML::Compile::WSDL11;
+use XML::Compile::SOAP11;
 use XML::Compile::Transport::SOAPHTTP;
 use XML::CompileX::Schema::Loader;
 
@@ -22,7 +23,7 @@ $user_agent->map_response( 'example.com' => \&examplecom_responder );
 my $transport
     = XML::Compile::Transport::SOAPHTTP->new( user_agent => $user_agent );
 
-my $wsdl   = XML::Compile::WSDL11->new($SERVICE_WSDL);
+my $wsdl   = XML::Compile::WSDL11->new;
 my $loader = new_ok(
     'XML::CompileX::Schema::Loader' => [
         uris       => URI::file->new_abs($SERVICE_WSDL),

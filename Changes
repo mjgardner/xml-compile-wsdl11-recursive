@@ -1,6 +1,8 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
 {{$NEXT}}
+
+0.003     2015-01-06 16:48:40-08:00 America/Los_Angeles
     - do not force the user to load XML::Compile::SOAP11 or
       XML::Compile::Transport::SOAPHTTP since they may not need them
     - simplify tests and examples to reflect the above and not duplicate URIs

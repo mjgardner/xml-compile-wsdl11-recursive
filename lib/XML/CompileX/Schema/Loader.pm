@@ -36,11 +36,12 @@ has wsdl => ( is => 'lazy', isa => InstanceOf ['XML::Compile::WSDL11'] );
 
 sub _build_wsdl {
     my $self = shift;
+    my @uri  = @{ $self->uris };
+
     my $wsdl = XML::Compile::WSDL11->new(
-        $self->_get_uri_content_ref( $self->uris->[0] ) );
-    for ( $self->uris->[ 1 .. $#{ $self->uris } ] ) {
-        $wsdl->addWSDL( $self->_get_uri_content_ref($_) );
-    }
+        $self->_get_uri_content_ref( shift @uri ) );
+    for (@uri) { $wsdl->addWSDL( $self->_get_uri_content_ref($_) ) }
+
     return $wsdl;
 }
 

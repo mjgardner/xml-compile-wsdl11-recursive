@@ -4,15 +4,16 @@ XML::CompileX::Schema::Loader - Load a web service and its dependencies for XML:
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
     use XML::Compile::WSDL11;
+    use XML::Compile::SOAP11;
+    use XML::Compile::Transport::SOAPHTTP;
     use XML::CompileX::Schema::Loader;
-    use LWP::Simple 'get';
 
-    my $wsdl   = XML::Compile::WSDL11->new(get('http://example.com/foo.wsdl'));
+    my $wsdl   = XML::Compile::WSDL11->new;
     my $loader = XML::CompileX::Schema::Loader->new(
         wsdl => $wsdl,
         uris => 'http://example.com/foo.wsdl',

@@ -1,6 +1,6 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
-{{$NEXT}}
+0.004     2015-01-07 15:31:50-08:00 America/Los_Angeles
 
 0.003     2015-01-06 16:48:40-08:00 America/Los_Angeles
     - do not force the user to load XML::Compile::SOAP11 or

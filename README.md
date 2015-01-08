@@ -4,7 +4,7 @@ XML::CompileX::Schema::Loader - Load a web service and its dependencies for XML:
 
 # VERSION
 
-version 0.003
+version 0.004
 
 # SYNOPSIS
 

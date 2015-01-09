@@ -4,7 +4,7 @@ XML::CompileX::Schema::Loader - Load a web service and its dependencies for XML:
 
 # VERSION
 
-version 0.004
+version 0.005
 
 # SYNOPSIS
 
@@ -159,7 +159,7 @@ from your repository :)
 
 [https://github.com/mjgardner/xml-compilex-schema-loader](https://github.com/mjgardner/xml-compilex-schema-loader)
 
-    https://github.com/mjgardner/xml-compilex-schema-loader.git
+    git clone git://github.com/mjgardner/xml-compilex-schema-loader.git
 
 # AUTHOR
 

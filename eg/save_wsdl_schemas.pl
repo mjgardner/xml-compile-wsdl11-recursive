@@ -9,7 +9,7 @@ use XML::Compile::SOAP11;
 use XML::CompileX::Schema::Loader;
 
 my $user_agent = LWP::UserAgent->new;
-$user_agent->set_my_handler( response_done => \&_response_done_handler );
+$user_agent->set_my_handler( response_done => \&response_done_handler );
 my $transport
     = XML::Compile::Transport::SOAPHTTP->new( user_agent => $user_agent );
 my $wsdl   = XML::Compile::WSDL11->new;
@@ -21,7 +21,7 @@ my $loader = XML::CompileX::Schema::Loader->new(
 $loader->collect_imports;
 $wsdl->compileCalls( transport => $transport );
 
-sub _response_done_handler {
+sub response_done_handler {
     my ( $response, $ua, $h ) = @_;
 
     my $path = Path::Tiny->cwd->child(

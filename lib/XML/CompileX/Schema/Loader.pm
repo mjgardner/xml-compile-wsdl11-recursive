@@ -156,6 +156,10 @@ files as warned above.  You can also provide a caching layer, as with
 L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> which is a sub-class of
 L<WWW::Mechanize|WWW::Mechanize> and L<LWP::UserAgent|LWP::UserAgent>.
 
+Please see the distribution's F<eg> directory for sample scripts that use
+this module to save schemas from a URL to the filesystem and then reload them
+again.
+
 =attr wsdl
 
 An L<XML::Compile::WSDL11|XML::Compile::WSDL11> instance. If you do not set

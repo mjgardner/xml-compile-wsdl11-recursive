@@ -47,6 +47,10 @@ files as warned above.  You can also provide a caching layer, as with
 [WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached) which is a sub-class of
 [WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize) and [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent).
 
+Please see the distribution's `eg` directory for sample scripts that use
+this module to save schemas from a URL to the filesystem and then reload them
+again.
+
 # ATTRIBUTES
 
 ## wsdl

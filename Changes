@@ -1,8 +1,8 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
-{{$NEXT}}
+0.005     2015-01-13 20:21:27-05:00 America/New_York
     - remove overly-specific NetSuite test
-    - add example save_wsdl_schemas.pl script
+    - add example scripts to the eg/ directory
 0.004     2015-01-08 13:38:38-08:00 America/Los_Angeles
     - better handling of multiple URIs when building default "wsdl" attribute
 0.003     2015-01-06 16:48:40-08:00 America/Los_Angeles

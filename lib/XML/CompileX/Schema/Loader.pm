@@ -2,7 +2,7 @@ package XML::CompileX::Schema::Loader;
 
 use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 
-# VERSION
+our $VERSION = '0.005';     # VERSION
 use utf8;
 use Moo;
 use MooX::Types::MooseLike::Base qw(ArrayRef HashRef InstanceOf);
@@ -111,6 +111,21 @@ sub _get_uri_content_ref {
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
+=for :stopwords Mark Gardner ZipRecruiter cpan testmatrix url annocpan anno bugtracker rt
+cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 NAME
+
+XML::CompileX::Schema::Loader - Load a web service and its dependencies for XML::Compile::WSDL11
+
+=head1 VERSION
+
+version 0.005
+
 =head1 SYNOPSIS
 
     use XML::Compile::WSDL11;
@@ -156,27 +171,155 @@ files as warned above.  You can also provide a caching layer, as with
 L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> which is a sub-class of
 L<WWW::Mechanize|WWW::Mechanize> and L<LWP::UserAgent|LWP::UserAgent>.
 
-=attr wsdl
+Please see the distribution's F<eg> directory for sample scripts that use
+this module to save schemas from a URL to the filesystem and then reload them
+again.
+
+=head1 ATTRIBUTES
+
+=head2 wsdl
 
 An L<XML::Compile::WSDL11|XML::Compile::WSDL11> instance. If you do not set
 this, a generic instance will be created with the XML from the URIs in C<uris>
 added. If there are problems retrieving any files, an
 L<HTTP::Exception|HTTP::Exception> is thrown with the details.
 
-=attr uris
+=head2 uris
 
 Required string or L<URI|URI> object, or a reference to an array of the same,
 that points to WSDL file(s) to compile.
 
-=attr user_agent
+=head2 user_agent
 
 Optional instance of an L<LWP::UserAgent|LWP::UserAgent> that will be used to
 get all WSDL and XSD content.
 
-=method collect_imports
+=head1 METHODS
+
+=head2 collect_imports
 
 Loops through all C<uris>, adding them as WSDL documents to C<wsdl> and then
 importing all definitions, schemas, included and imported definition and schema
 locations.  You should call this before calling any of the L<compilers in
 XML::Compile::WSDL11|XML::Compile::WSDL11/Compilers> to ensure that any
 dependencies have been imported.
+
+=head1 SUPPORT
+
+=head2 Perldoc
+
+You can find documentation for this module with the perldoc command.
+
+  perldoc XML::CompileX::Schema::Loader
+
+=head2 Websites
+
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
+
+=over 4
+
+=item *
+
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+L<http://metacpan.org/release/XML-CompileX-Schema-Loader>
+
+=item *
+
+Search CPAN
+
+The default CPAN search engine, useful to view POD in HTML format.
+
+L<http://search.cpan.org/dist/XML-CompileX-Schema-Loader>
+
+=item *
+
+AnnoCPAN
+
+The AnnoCPAN is a website that allows community annotations of Perl module documentation.
+
+L<http://annocpan.org/dist/XML-CompileX-Schema-Loader>
+
+=item *
+
+CPAN Ratings
+
+The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
+
+L<http://cpanratings.perl.org/d/XML-CompileX-Schema-Loader>
+
+=item *
+
+CPAN Forum
+
+The CPAN Forum is a web forum for discussing Perl modules.
+
+L<http://cpanforum.com/dist/XML-CompileX-Schema-Loader>
+
+=item *
+
+CPANTS
+
+The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
+
+L<http://cpants.cpanauthors.org/dist/XML-CompileX-Schema-Loader>
+
+=item *
+
+CPAN Testers
+
+The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
+
+L<http://www.cpantesters.org/distro/X/XML-CompileX-Schema-Loader>
+
+=item *
+
+CPAN Testers Matrix
+
+The CPAN Testers Matrix is a website that provides a visual overview of the test results for a distribution on various Perls/platforms.
+
+L<http://matrix.cpantesters.org/?dist=XML-CompileX-Schema-Loader>
+
+=item *
+
+CPAN Testers Dependencies
+
+The CPAN Testers Dependencies is a website that shows a chart of the test results of all dependencies for a distribution.
+
+L<http://deps.cpantesters.org/?module=XML::CompileX::Schema::Loader>
+
+=back
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests through the web
+interface at
+L<https://github.com/mjgardner/xml-compilex-schema-loader/issues>.
+You will be automatically notified of any progress on the
+request by the system.
+
+=head2 Source Code
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+L<https://github.com/mjgardner/xml-compilex-schema-loader>
+
+  git clone git://github.com/mjgardner/xml-compilex-schema-loader.git
+
+=head1 AUTHOR
+
+Mark Gardner <mjgardner@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by ZipRecruiter.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

@@ -1,4 +1,4 @@
-#!/bin/env perl
+#!/usr/bin/env perl
 
 use Modern::Perl '2010';
 use List::Util 1.33 'any';

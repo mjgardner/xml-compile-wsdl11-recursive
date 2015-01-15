@@ -8,10 +8,13 @@ use XML::Compile::WSDL11;
 use XML::Compile::SOAP11;
 use XML::CompileX::Schema::Loader;
 
+# create a user agent that will save content to the filesystem
 my $user_agent = LWP::UserAgent->new;
 $user_agent->set_my_handler( response_done => \&response_done_handler );
 my $transport
     = XML::Compile::Transport::SOAPHTTP->new( user_agent => $user_agent );
+
+# use XML::CompileX::Schema::Loader to collect WSDL and XSD files
 my $wsdl   = XML::Compile::WSDL11->new;
 my $loader = XML::CompileX::Schema::Loader->new(
     uris       => \@ARGV,
@@ -19,8 +22,11 @@ my $loader = XML::CompileX::Schema::Loader->new(
     wsdl       => $wsdl,
 );
 $loader->collect_imports;
+
+# make sure all calls compile
 $wsdl->compileCalls( transport => $transport );
 
+# LWP handler that saves content based on its path on the server
 sub response_done_handler {
     my ( $response, $ua, $h ) = @_;
 

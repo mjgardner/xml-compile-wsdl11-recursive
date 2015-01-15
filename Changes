@@ -1,7 +1,7 @@
 Revision history for perl module XML::CompileX::Schema::Loader
 
 {{$NEXT}}
-
+    - minor fixes and added inline commentary to example scripts
 0.005     2015-01-13 20:23:35-05:00 America/New_York
     - remove overly-specific NetSuite test
     - add example scripts to the eg/ directory
